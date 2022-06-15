@@ -1,12 +1,17 @@
-from .models_utils import *
-crud = CRUD()
+from numpy import record
+from .crud import *
 
 
-class Model_Company:
+
+class Model_Company(CRUD):
+    table = "company"
     def insert_company(self,company_name):
-        record = crud.insert("company",
-                            ["company_name"],
-                            [company_name]
+        fields = " company_name "
+        data = [company_name]
+        record = CRUD.insert(self,
+                            self.table,
+                            fields,
+                            data
         )
         return dict(record)
     

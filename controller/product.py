@@ -25,9 +25,15 @@ class Product:
             product_images=[]
             for i in img_list:
                 product_images.append(secure_filename(i.filename))
-            new_product = product_model.create_product(name,description,price,gst,category,product_images,company_id)
+            new_product = product_model.create_product(name,
+                                                       description,
+                                                       price,
+                                                       gst,
+                                                       category,
+                                                       product_images,
+                                                       company_id
+            )
             for i in new_product["product images"]:
-               
                 image_url = s3.get_image("product/",i["image_name"])
                 i["image_name"] = image_url
 
@@ -44,11 +50,16 @@ class Product:
         company_id = request.form['company_id']
         img_list=request.files['product_image']
         if validator.validate_input([name,description,price,gst,category,img_list,company_id]):
-            # product_images=[]
-            # for i in img_list:
-            #     product_images.append(secure_filename(i.filename))
             if product_model.product_exist(id):
-                updated_product=product_model.update_product_in_db(id,name,description,price,gst,category,company_id)
+                updated_product=product_model.update_product_in_db(id,
+                                                                   name,
+                                                                   description,
+                                                                   price,
+                                                                   gst,
+                                                                   category,
+                                                                   company_id
+                )
+
                 return jsonify(updated_product)
             else:
                 return jsonify("Product ID Not Exist")
@@ -80,7 +91,12 @@ class Product:
         if request.args.get('filter_field') and request.args.get('value'):
             filter_field = request.args.get('filter_field')
             value = request.args.get('value')
-        data=product_model.paged_sorted_filerd(page=page,sort=sort,order=order,filter_field=filter_field,value=value)
+        data=product_model.paged_sorted_filerd(page=page,
+                                               sort=sort,
+                                               order=order,
+                                               filter_field=filter_field,
+                                               value=value
+        )
         return jsonify(data)
 
 

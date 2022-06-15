@@ -10,6 +10,11 @@ customer.route("/login",methods=['POST'])(customer_obj.login)
 customer.route('/get_profile/<int:id>',methods=['POST'])(customer_obj.get_profile)
 customer.route('/set_profile',methods=['POST'])(customer_obj.set_profile)
 customer.route('/all_profile',methods=['POST'])(customer_obj.all_profile)
+customer.route('/forgot_password',methods=['POST'])(customer_obj.forgot_password)
+customer.route('/change_password',methods=['POST'])(customer_obj.change_password)
+customer.route('/add_address',methods=['POST'])(customer_obj.add_address)
+
+
 
 
 

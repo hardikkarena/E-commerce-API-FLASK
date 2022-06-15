@@ -27,7 +27,7 @@ class S3:
         imge_url = s3.generate_presigned_url('get_object',
                                               Params={'Bucket': BUCKET,
                                                             'Key': path+image},
-                                             ExpiresIn=200
+                                              ExpiresIn=200
                                             )
         return imge_url
     
