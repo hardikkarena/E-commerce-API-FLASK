@@ -1,14 +1,16 @@
 from dataclasses import field, fields
 
 from certifi import where
+from numpy import product
 from .crud import CRUD
 from library.s3 import S3
+from library.extra import Extra
 
 
 crud = CRUD()
 s3 = S3()
 
-class Product_Model():
+class Product_Model(Extra):
     table = " product as p "
     def create_product(self,name,description,price,gst,category,product_images,company_id):
         fields = """ "name","description","price","gst","category","company_id" """
@@ -44,9 +46,7 @@ class Product_Model():
                            many=True
         )
         record = dict(record)
-        product_images = []
-        for i in imgs:
-            product_images.append(dict(i))
+        product_images = Extra.get_list_of_dict(self,imgs)
         record["product images"] = product_images
         return dict(record)
 
@@ -89,7 +89,7 @@ class Product_Model():
                            where,
                            join
         )
-        product_id = data["id"]
+        product_id = data["id"] 
         fields = """image_name """
         where = "WHERE product_id='%s'"%product_id
         imgs = crud.select("product_images ",
@@ -130,7 +130,6 @@ class Product_Model():
                               many=True
             )
             product_images = []
-            print(product_id)
             for i in imgs:
                 d1 = dict(i)
                 url = s3.get_image("product/",i["image_name"])
@@ -139,4 +138,35 @@ class Product_Model():
             product["product images"] = product_images            
             products.append(product)
         return products
+    def search_product(self,product_name):
+        fields = "*"
+        where = "WHERE name LIKE '%"+product_name+"%'"
+        records = crud.select(self.table,
+                              fields,
+                              where, 
+                              many=True      
+        )
+        products = []
+        
+        for i in records:
+            product = dict(i)
+            product_id = product["id"]
+            table = " product_images "
+            fields = " image_name "
+            where = " where product_id=%s"%product_id
+            imgs = crud.select(table,
+                              fields,
+                              where,
+                              many=True
+            )
+            product_images = []
+            for i in imgs:
+                d1 = dict(i)
+                url = s3.get_image("product/",i["image_name"])
+                d1["image_name"] = url
+                product_images.append(d1)
+            product["product images"] = product_images
+            products.append(product)
+        return products
+        
 

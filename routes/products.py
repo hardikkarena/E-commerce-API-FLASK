@@ -10,3 +10,4 @@ productt.route('/delete_product/<int:id>',methods=['POST'])(product_obj.delete_p
 productt.route('/get_one_product/<int:id>',methods=['POST'])(product_obj.get_one_product)
 productt.route('/get_all_product',methods=['POST'])(product_obj.get_all_product)    
 productt.route('/get_file',methods=['POST'])(product_obj.get_file)
+productt.route('/search',methods=['POST'])(product_obj.search)

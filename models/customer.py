@@ -5,6 +5,7 @@ from certifi import where
 from .crud import CRUD
 from library.dbconection import *
 from library.s3 import S3
+from library.extra import Extra
 import hashlib
 
 crud = CRUD()
@@ -16,7 +17,6 @@ class Model_Customer(S3):
     def insert_customer(self,email,password,first_name,last_name,profil_pic):
         fields = """ "email","password","first_name","last_name","profile_image" """
         data=[email,password,first_name,last_name,profil_pic]
-        print(type(self.table))
         record=dict(crud.insert(self.table,
                     fields,
                     data   
@@ -54,7 +54,6 @@ class Model_Customer(S3):
                              fields,
                              where
         )
-        print(record)
         if record!=None:
             return True
         else:
@@ -170,7 +169,6 @@ class Model_Customer(S3):
                     page=page,sort=sort,order=order,filter_field=filter_field,value=value
                     ,many=True
         )
-        print(record)
         data=[]
         for i in record:
             path="customer/"    

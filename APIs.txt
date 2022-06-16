@@ -1,0 +1,32 @@
+------------Company API------------
+/add_company
+
+
+------------Customer API------------
+/sign_up
+/sent_otp/<int:id>
+/verify_otp/<int:id>
+/login
+/get_profile/<int:id>
+/set_profile
+/all_profile
+/forgot_password
+/change_password
+/add_address
+
+------------Product API------------
+/add_product
+/update_product/<int:id>
+/delete_product/<int:id>
+/get_one_product/<int:id>
+/get_all_product
+/get_file
+
+------------Order API------------
+/add_to_cart
+/remove_from_cart
+/place_order
+/cancel_order
+/my_orders
+/order/<int:id>
+/check_out_cart

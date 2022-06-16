@@ -2,6 +2,7 @@ from flask import request,jsonify
 from library.validate import Validator
 from library.s3 import S3
 from library.authentication import Authentication
+from models.company import Model_Company
 from models.product import Product_Model
 from werkzeug.utils import secure_filename
 import pandas as pd
@@ -99,7 +100,11 @@ class Product:
         )
         return jsonify(data)
 
-
+    def search(self):
+        product_name = request.json["product_name"]
+        products = product_model.search_product(product_name)
+        return jsonify(products)
+        
     def get_file(self):
         file=request.files['file']
         file_name = secure_filename(request.files['file'].filename)

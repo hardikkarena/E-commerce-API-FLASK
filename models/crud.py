@@ -1,4 +1,6 @@
 from dataclasses import field, fields
+
+from numpy import PINF
 from library.dbconection import *
 
 class CRUD:
@@ -7,6 +9,7 @@ class CRUD:
         query = sql.split()
         if query[0]=="INSERT":
             if many:
+                print(peram)
                 cursor.executemany(sql,peram)
                 connection_pgsql.commit()
             else:
@@ -22,15 +25,20 @@ class CRUD:
             connection_pgsql.commit()
         if query[0]=="SELECT":
             if many:    
-                cursor.execute(sql,peram)
+                cursor.execute(sql)
                 return cursor.fetchall()
             else:
-                cursor.execute(sql,peram)
+                cursor.execute(sql)
                 return cursor.fetchone()
 
     def insert(self,table,fields,data,many=False): 
         sql = "INSERT INTO " + table + "(" + fields + ") values("
-        for i in data:
+        if many:
+            temp_data = data[0]
+        else:
+            temp_data = data
+            
+        for i in temp_data:
             sql =sql+"%s,"
         sql = sql.rstrip(sql[-1])
         sql = sql + ") RETURNING *"
@@ -47,6 +55,7 @@ class CRUD:
         self.exicute_query(sql,())
 
     def select(self,table,fields,where="",join="",page="",sort="",order="",filter_field="",value="",many=False):
+        
         sql = "SELECT "+ fields + " FROM " + table 
         if join != "":
             sql = sql + join
@@ -61,8 +70,9 @@ class CRUD:
             limit=3
             offset=(limit * int(page)) - limit
             sql = sql+" limit %s offset %s"%(limit,offset)
-        sql = sql + where
+        sql = sql +" "+ where
         record = self.exicute_query(sql,(),many)
+       
         return record
 
 
